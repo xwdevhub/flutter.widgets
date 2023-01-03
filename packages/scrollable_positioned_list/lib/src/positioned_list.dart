@@ -1,6 +1,8 @@
 // Copyright 2019 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+import 'dart:math';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -308,6 +310,17 @@ class _PositionedListState extends State<PositionedList> {
   void _schedulePositionNotificationUpdate() {
     if (!updateScheduled) {
       updateScheduled = true;
+      if (scrollController.hasClients && Platform.isWindows) {
+        ScrollDirection scrollDirection =
+            scrollController.position.userScrollDirection;
+        if (scrollDirection != ScrollDirection.idle) {
+          double scrollEnd = scrollController.offset +
+              (scrollDirection == ScrollDirection.reverse ? 80 : -80);
+          scrollEnd = min(scrollController.position.maxScrollExtent,
+              max(scrollController.position.minScrollExtent, scrollEnd));
+          scrollController.jumpTo(scrollEnd);
+        }
+      }
       SchedulerBinding.instance.addPostFrameCallback((_) {
         final elements = registeredElements.value;
         if (elements == null) {
