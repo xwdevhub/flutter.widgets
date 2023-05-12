@@ -345,7 +345,7 @@ class _PositionedListState extends State<PositionedList> {
           // Skip this element if `box` has never been laid out.
           if (!box.hasSize) continue;
           if (widget.scrollDirection == Axis.vertical) {
-            final reveal = viewport!.getOffsetToReveal(box, 0).offset;
+            final reveal = viewport!.getOffsetToReveal(box, anchor).offset;
             if (!reveal.isFinite) continue;
             final itemOffset =
                 reveal - viewport.offset.pixels + anchor * viewport.size.height;

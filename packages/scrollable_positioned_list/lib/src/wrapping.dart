@@ -865,11 +865,12 @@ abstract class CustomRenderViewport
 
   @override
   double scrollOffsetOf(RenderSliver child, double scrollOffsetWithinChild) {
-    scrollOffsetWithinChild= scrollOffsetWithinChild-anchor*child.constraints.viewportMainAxisExtent ;
     assert(child.parent == this);
     final GrowthDirection growthDirection = child.constraints.growthDirection;
     switch (growthDirection) {
       case GrowthDirection.forward:
+        scrollOffsetWithinChild = scrollOffsetWithinChild +
+            anchor * child.constraints.viewportMainAxisExtent;
         double scrollOffsetToChild = 0.0;
         RenderSliver? current = center;
         while (current != child) {
@@ -878,6 +879,8 @@ abstract class CustomRenderViewport
         }
         return scrollOffsetToChild + scrollOffsetWithinChild;
       case GrowthDirection.reverse:
+        scrollOffsetWithinChild = scrollOffsetWithinChild -
+            anchor * child.constraints.viewportMainAxisExtent;
         double scrollOffsetToChild = 0.0;
         RenderSliver? current = childBefore(center!);
         while (current != child) {
